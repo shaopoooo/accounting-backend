@@ -1,3 +1,4 @@
 function hello () {
-  return {afdsf: 1 };
+  return { afdsf: 1 }
 }
+hello()
