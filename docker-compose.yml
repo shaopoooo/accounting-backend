@@ -6,7 +6,7 @@ services:
   #     context: ./
   #     dockerfile: ./api/Dockerfile.dev
   #   ports:
-  #     - ${PORT}:${PORT}
+  #     - ${API_PORT}:${API_PORT}
   #   links:
   #     - mongo
   #   volumes:
@@ -16,15 +16,15 @@ services:
   #     - mongo
   mongo:
     image: mongo:5.0
-    command: mongod --port ${DBPORT}
+    command: mongod --port ${DB_PORT}
     ports:
-      - "${DBPORT}:${DBPORT}"
+      - "${DB_PORT}:${DB_PORT}"
     environment:
-      - MONGO_INITDB_DATABASE=${DBNAME}
-      - MONGO_INITDB_ROOT_USERNAME=${DBROOTUSER}
-      - MONGO_INITDB_ROOT_PASSWORD=${DBROOTPASSWORD}
-      - MONGO_USER=${DBUSER}
-      - MONGO_PASSWORD=${DBPASSWORD}
+      - MONGO_INITDB_ROOT_USERNAME=${DB_ROOT_USER}
+      - MONGO_INITDB_ROOT_PASSWORD=${DB_ROOT_PASSWORD}
+      - MONGO_INITDB_DATABASE=${DB_NAME}
+      - MONGO_USER=${DB_USER}
+      - MONGO_PASSWORD=${DB_PASSWORD}
     volumes:
       - ./config/init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js
       - ./mongo:/data/db
