@@ -20,20 +20,11 @@ services:
     ports:
       - "${DBPORT}:${DBPORT}"
     environment:
-      MONGO_INITDB_DATABASE: "hello"
-      MONGO_INITDB_ROOT_PASSWORD_FILE: /run/secrets/mongo_root_password
-      MONGO_INITDB_ROOT_USERNAME: "root"
-      MONGO_PASSWORD_FILE: /run/secrets/mongo_password
-      MONGO_USER: "user"
-    secrets:
-      - mongo_password
-      - mongo_root_password
+      - MONGO_INITDB_DATABASE=${DBNAME}
+      - MONGO_INITDB_ROOT_USERNAME=${DBROOTUSER}
+      - MONGO_INITDB_ROOT_PASSWORD=${DBROOTPASSWORD}
+      - MONGO_USER=${DBUSER}
+      - MONGO_PASSWORD=${DBPASSWORD}
     volumes:
       - ./config/init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js
       - ./mongo:/data/db
-  
-secrets:
-  mongo_password:
-    file: ./secrets/mongo_password.txt
-  mongo_root_password:
-    file: ./secrets/mongo_root_password.txt

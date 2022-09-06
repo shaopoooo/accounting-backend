@@ -1,7 +1,7 @@
 db.createUser(
     {
         user: _getEnv("MONGO_USER"),
-        pwd: cat(_getEnv("MONGO_PASSWORD_FILE")),
+        pwd: _getEnv("MONGO_PASSWORD"),
         roles: [
             "readWrite", "dbAdmin"
         ]
