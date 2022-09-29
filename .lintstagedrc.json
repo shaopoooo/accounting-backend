@@ -1,6 +1,6 @@
 {
     "*.js": [
       "standard --fix",
-      "yarn test"
+      "yarn test:staged"
     ]
 }
