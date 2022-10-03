@@ -1,16 +1,32 @@
-const { MissingParamError } = require('./custom-error')
+const {
+  MissingParamError,
+  UnauthedError,
+  ServerError
+} = require('./custom-error')
 
 module.exports = {
+  success: (body) => {
+    return {
+      statusCode: 200,
+      body
+    }
+  },
   badRequest: (paramName) => {
     return {
       statusCode: 400,
       body: MissingParamError(paramName)
     }
   },
-  serverError: () => {
-    return { statusCode: 500 }
+  unauthError: () => {
+    return {
+      statusCode: 401,
+      body: UnauthedError()
+    }
   },
-  success: () => {
-    return { statusCode: 200 }
+  serverError: () => {
+    return {
+      statusCode: 500,
+      body: ServerError()
+    }
   }
 }

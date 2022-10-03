@@ -1,6 +1,6 @@
 const mongoose = require('mongoose')
 const logger = require('./logger')
-const { mongo } = require('./env')
+const { mongo } = require('../config/env')
 
 /**
  * Connect to mongo db

@@ -6,7 +6,7 @@ const {
   env
 } = require('./config/env')
 
-const setupRoutes = require('../route')
+const setupRoutes = require('./route')
 
 const app = express()
 
