@@ -1,36 +1,5 @@
-const user = {
-  login: (httpRequest) => {
-    if (!httpRequest || !httpRequest.body) return HttpCode.serverError()
-
-    const { email, password } = httpRequest.body
-    if (!email) return HttpCode.badRequest('email')
-    if (!password) return HttpCode.badRequest('password')
-
-    return { statusCode: 200 }
-  }
-}
-
-const HttpCode = {
-  badRequest: (paramName) => {
-    return {
-      statusCode: 400,
-      body: MissingParamError(paramName)
-    }
-  },
-  serverError: () => {
-    return { statusCode: 500 }
-  }
-}
-
-const MissingParamError = (paramName) => {
-  class CustomError extends Error {
-    constructor (paramName) {
-      super(`Missing param ${paramName}`)
-      this.name = 'MissingParamError'
-    }
-  }
-  return new CustomError(paramName)
-}
+const user = require('./index')
+const { MissingParamError } = require('../../utils/custom-error')
 
 describe('login Router', () => {
   test('return 500 if httpRequest.body is not provided', () => {

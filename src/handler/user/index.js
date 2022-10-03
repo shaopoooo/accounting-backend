@@ -1,45 +1,14 @@
-const authUseCase = require('./authUseCase')
+// const authUseCase = require('./authUseCase')
+const HttpCode = require('../../utils/http-response')
 
-exports.user = {
-  login: () => {
-    return async (request) => {
-      try {
-        const { email, password } = request.body
+module.exports = {
+  login: (httpRequest) => {
+    if (!httpRequest || !httpRequest.body) return HttpCode.serverError()
 
-        if (!email) {
-          return {
-            statusCode: 404,
-            body: {
-              msg: 'emailError'
-            }
-          }
-        }
+    const { email, password } = httpRequest.body
+    if (!email) return HttpCode.badRequest('email')
+    if (!password) return HttpCode.badRequest('password')
 
-        if (!password) {
-          return {
-            statusCode: 404,
-            body: {
-              msg: 'passwordError'
-            }
-          }
-        }
-
-        const accessToken = await authUseCase.auth(email, password)
-
-        return {
-          statusCode: 200,
-          body: {
-            accessToken
-          }
-        }
-      } catch (error) {
-        return {
-          statusCode: 500,
-          body: {
-            error
-          }
-        }
-      }
-    }
+    return HttpCode.success()
   }
 }
