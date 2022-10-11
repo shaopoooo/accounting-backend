@@ -20,9 +20,10 @@
   "scripts": {
     "prepare": "husky install",
     "dev": "nodemon ./src/app.js",
-    "test": "jest --watch --silent --colors",
-    "test:staged": "jest --passWithNoTests --findRelatedTests --silent --noStackTrace",
-    "test:ci": "jest --coverage"
+    "test": "jest --silent --colors --noStackTrace --passWithNoTests",
+    "test:unit": "yarn test --watchAll",
+    "test:staged": "yarn test --findRelatedTests $(git status --porcelain | grep M | awk '{print $2}')",
+    "test:ci": "yarn test --coverage"
   },
   "standard": {
     "env": ["jest"],
