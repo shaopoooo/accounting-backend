@@ -5,13 +5,21 @@ const {
   ServerError
 } = require('../../utils/custom-error')
 
-const makeSut = ({ accessToken = 'token' } = {}) => {
+const makeSut = ({ accessToken = 'token', isEmailInvalid = true } = {}) => {
   const authUseCase = async (email, password) => {
     return { accessToken, email, password }
   }
+
+  const validator = {
+    email: (email = '') => {
+      return email.length && isEmailInvalid
+    }
+  }
+
   return {
     authUseCase,
-    userSpy: user(authUseCase)
+    validator,
+    userSpy: user(authUseCase, validator)
   }
 }
 
@@ -21,6 +29,17 @@ describe('user handler', () => {
     const httpResponse = await userSpy.login()
     expect(httpResponse.statusCode).toBe(500)
     expect(httpResponse.body).toEqual(ServerError('email'))
+  })
+
+  test('should return 500 if usecase is not provided', async () => {
+    const httpRequest = {
+      body: {
+        email: '123@email',
+        password: '123456'
+      }
+    }
+    const httpResponse = await user().login(httpRequest)
+    expect(httpResponse.statusCode).toBe(500)
   })
 
   test('return 400 if email is not provided', async () => {
@@ -39,12 +58,25 @@ describe('user handler', () => {
     const { userSpy } = makeSut()
     const httpRequest = {
       body: {
-        email: '123'
+        email: '123@email'
       }
     }
     const httpResponse = await userSpy.login(httpRequest)
     expect(httpResponse.statusCode).toBe(400)
     expect(httpResponse.body).toEqual(MissingParamError('password'))
+  })
+
+  test('return 400 if email is invalid', async () => {
+    const httpRequest = {
+      body: {
+        email: '123',
+        password: '123'
+      }
+    }
+    const { userSpy } = makeSut({ isEmailInvalid: false })
+    const httpResponse = await userSpy.login(httpRequest)
+    expect(httpResponse.statusCode).toBe(400)
+    expect(httpResponse.body).toEqual(MissingParamError('email'))
   })
 
   test('should call AuthCase with correct params', async () => {
@@ -67,7 +99,7 @@ describe('user handler', () => {
     const { userSpy } = makeSut({ accessToken: null })
     const httpRequest = {
       body: {
-        email: 'error@error',
+        email: 'error@email',
         password: '123456'
       }
     }
@@ -77,22 +109,11 @@ describe('user handler', () => {
     expect(httpResponse.body).toEqual(UnauthedError())
   })
 
-  test('should return 500 if usecase is not provided', async () => {
-    const httpRequest = {
-      body: {
-        email: '123@123',
-        password: '123456'
-      }
-    }
-    const httpResponse = await user().login(httpRequest)
-    expect(httpResponse.statusCode).toBe(500)
-  })
-
   test('should return 200 when auth success', async () => {
     const { userSpy, authUseCase } = makeSut()
     const httpRequest = {
       body: {
-        email: '123',
+        email: '123@email',
         password: '456'
       }
     }

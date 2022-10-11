@@ -19,9 +19,10 @@
   },
   "scripts": {
     "prepare": "husky install",
-    "test": "jest --watchAll",
-    "test:staged": "jest",
-    "dev": "nodemon ./src/app.js"
+    "dev": "nodemon ./src/app.js",
+    "test": "jest --watch --silent --colors",
+    "test:staged": "jest --passWithNoTests --findRelatedTests --silent --noStackTrace",
+    "test:ci": "jest --coverage"
   },
   "standard": {
     "env": ["jest"],
